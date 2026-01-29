@@ -37,3 +37,4 @@ console.log(found3 ? found3.toString() : "Student not found");
 // Also show printStudent works with both class instances
 printStudent(ug1);
 printStudent(es1);
+
