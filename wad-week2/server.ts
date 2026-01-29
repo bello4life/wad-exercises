@@ -2,6 +2,7 @@ import express from 'express';
 import database from 'better-sqlite3';
 
 const app = express();
+app.use(express.json());
 const db = new database("wadsongs.db")
 
 app.get('/', (req,res)=> {
@@ -31,6 +32,24 @@ app.get ('/song/:id', (req, res) => {
 	const song = stmt.all (req.params.id);
 	res.json(song);
 });
+app.post('/song/create', (req, res) => {
+	try {
+		const stmt = db.prepare("INSERT INTO wadsongs(title, artist, year, downloads, price, quantity) VALUES(?,?,?,?,?,?)");
+		const info = stmt.run(
+		  req.body.title,
+		  req.body.artist,
+		  req.body.year,
+		  req.body.downloads,
+		  req.body.price,
+		  req.body.quantity
+		);
+		res.json({id: info.lastInsertRowid});
+    } catch(error) {
+        console.log(error); 
+        res.status(500).json({ error: "Failed to create song" });
+    }
+});
+
 	
 
 const PORT = 3000;
