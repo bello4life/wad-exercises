@@ -4,4 +4,5 @@
         "noEmit": true
     },
     "files": ["main.ts"]
+
 }
