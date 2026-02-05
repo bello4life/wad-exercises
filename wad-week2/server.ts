@@ -4,6 +4,7 @@ import database from 'better-sqlite3';
 const app = express();
 app.use(express.json());
 const db = new database("wadsongs.db")
+app.use(express.static('public'));
 
 app.get('/', (req,res)=> {
     res.send('Hello World from Express!');
