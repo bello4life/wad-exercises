@@ -51,6 +51,102 @@ app.post('/song/create', (req, res) => {
     }
 });
 
+app.put("/song/:id", (req, res) => {
+
+  const { price, quantity } = req.body;
+  const id = req.params.id;
+
+  if (price === "" || quantity === "") {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  try {
+    const stmt = db.prepare(
+      "UPDATE wadsongs SET price = ?, quantity = ? WHERE id = ?"
+    );
+
+    const result = stmt.run(price, quantity, id);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: "Song not found" });
+    }
+
+    res.json({ message: "Song updated" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Update failed" });
+  }
+});
+
+
+app.delete("/song/:id", (req, res) => {
+
+  const id = req.params.id;
+
+  try {
+    const stmt = db.prepare("DELETE FROM wadsongs WHERE id = ?");
+    const result = stmt.run(id);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ error: "Song not found" });
+    }
+
+    res.json({ message: "Song deleted" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Delete failed" });
+  }
+});
+
+interface SongRow {
+  quantity: number;
+}
+
+
+app.post("/song/:id/buy", (req, res) => {
+
+  const id = req.params.id;
+
+  try {
+
+    // 1) Check stock
+    const getSong = db.prepare(
+      "SELECT quantity FROM wadsongs WHERE id = ?"
+    );
+
+    const song = getSong.get(id) as SongRow | undefined;
+
+
+    if (!song) {
+      return res.status(404).json({ error: "Song not found" });
+    }
+
+    if (song.quantity <= 0) {
+      return res.status(400).json({ error: "Out of stock" });
+    }
+
+    // 2) Reduce quantity
+    const updateStmt = db.prepare(
+      "UPDATE wadsongs SET quantity = quantity - 1 WHERE id = ?"
+    );
+    updateStmt.run(id);
+
+    // 3) Create order
+    const orderStmt = db.prepare(
+      "INSERT INTO orders(song_id, quantity) VALUES (?, ?)"
+    );
+    orderStmt.run(id, 1);
+
+    res.json({ message: "Order created" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Purchase failed" });
+  }
+});
+
 	
 
 const PORT = 3000;
