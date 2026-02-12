@@ -16,6 +16,7 @@ document.getElementById('search')!.addEventListener('click', async()=> {
     // Read the product type from a text field
     const artist = (document.getElementById('theArtist') as HTMLInputElement).value;
     try {
+        const resultsDiv = document.getElementById('htresults')!;
         // Send a request to our remote URL
         const response = await fetch(`http://localhost:3000/artist/${artist}`);
 
@@ -25,9 +26,11 @@ document.getElementById('search')!.addEventListener('click', async()=> {
         // Loop through the array of JSON objects and add the results to a <div>
         let html = "";
         songs.forEach ( song => {
-            html += `Title: ${song.title} Artist: ${song.artist} year: ${song.year}<br />`;
+          const p = document.createElement("p")
+          p.innerHTML= `Title: ${song.title} Artist: ${song.artist} year: ${song.year}<br />`;
+          resultsDiv.appendChild(p);
         });
-        document.getElementById('htresults')!.innerHTML = html;
+        
     } catch (e) {
         alert(`There was an error: ${e}`);
     }
