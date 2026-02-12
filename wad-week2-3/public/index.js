@@ -15,6 +15,24 @@ document.getElementById('search').addEventListener('click', async () => {
         songs.forEach(song => {
             const p = document.createElement("p");
             p.innerHTML = `Title: ${song.title} Artist: ${song.artist} year: ${song.year}<br />`;
+            const button = document.createElement("button");
+            const buttontext = document.createTextNode("Buy");
+            button.appendChild(buttontext);
+            button.addEventListener("click", async () => {
+                try {
+                    const buyResponse = await fetch(`http://localhost:3000/song/${song.id}/buy`, { method: "POST" });
+                    if (!buyResponse.ok) {
+                        alert(`Error buying song. Status: ${buyResponse.status}`);
+                        return;
+                    }
+                    const result = await buyResponse.json();
+                    alert(result.message);
+                }
+                catch (err) {
+                    alert("Network error while buying.");
+                }
+            });
+            p.appendChild(button);
             resultsDiv.appendChild(p);
         });
     }
