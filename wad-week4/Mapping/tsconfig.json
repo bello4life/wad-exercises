@@ -3,7 +3,8 @@
     "target": "esnext",
     "strict": true,
     "esModuleInterop": true,
-    "noEmit": true
+    "noEmit": true,
+    "skipLibCheck": true
   },
-  "files": ["main.ts"]
+  "files": ["main.ts", "server.ts"]
 }

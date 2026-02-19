@@ -9,4 +9,20 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: attrib 
 }).addTo(map);
             
-map.setView([50.908,-1.4], 14);
+const lagos = L.latLng(6.5244, 3.3792);
+map.setView(lagos, 10);
+const marker = L.marker(lagos).addTo(map);
+marker.bindPopup("My home town");
+
+map.on("click", e =>{
+    const text = prompt("Please enter some text");
+
+    if (text !== null) {
+        const newMarker = L.marker(e.latlng).addTo(map);
+        newMarker.bindPopup(text).openPopup();
+        
+    }
+    alert(`You clicked at:${e.latlng.lat} ${e.latlng.lng}`);
+     
+
+});
