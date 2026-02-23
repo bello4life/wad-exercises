@@ -1,10 +1,13 @@
 import express from 'express';
 import database from 'better-sqlite3';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
 const db = new database("wadsongs.db")
 app.use(express.static('public'));
+
+app.use(cors({"origin":"http://localhost:5173"}));
 
 app.get('/', (req,res)=> {
     res.send('Hello World from Express!');
@@ -148,13 +151,33 @@ app.post("/song/:id/buy", (req, res) => {
 });
 
 app.get("/hometown/:artist", (req, res) =>{
-  const stmt = db.prepare("SELECT hometown, lat, lon FROM artists WHERE artist=?");
+  const stmt = db.prepare("SELECT hometown, lat, lon FROM artists WHERE name=? COLLATE NOCASE");
 	const results = stmt.get (req.params.artist);
   if (!results) {
       return res.status(404).json({ error: "artist not found" });
     }
 
   res.json(results);
+
+});
+
+app.post("/hometown", (req, res) =>{
+  try{
+    const stmt = db.prepare("INSERT INTO artists(name, lat, lon, hometown) VALUES(?,?,?,?)");
+    const info = stmt.run(
+      req.body.name,
+      req.body.lat,
+      req.body.lon,
+      req.body.hometown
+    );
+    res.status(200).json({
+      id: info.lastInsertRowid
+    });
+
+  } catch(error) {
+    console.log(error);
+    res.status(500).json({error:"failled to add hometown details"})
+  }
 
 });
 
