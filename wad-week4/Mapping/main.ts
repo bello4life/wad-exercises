@@ -26,3 +26,15 @@ map.on("click", e =>{
      
 
 });
+
+interface artist {
+    hometown: string;
+    lat: number;
+    lon: number;
+}
+
+document.getElementById('search')!.addEventListener('click', async()=> {
+    const artist = (document.getElementById('artistName') as HTMLInputElement).value;
+ 
+});
+
