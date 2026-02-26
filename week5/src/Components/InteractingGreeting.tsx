@@ -14,9 +14,22 @@ export default function InteractingGreeting() {
             <h2>Enter your age</h2>
             <input id='Age' type='number' value={age} onChange={updateStateName} />
             <button onClick={updateStateName}>Update!</button>
-             <h1>
-                
+            <h1>
+                Your name is {firstname} {lastname}, age is {age}.
             </h1>
+            <div
+                style={{
+                    backgroundColor:
+                        Number(age) >= 18 ? "green" : "red",
+                    padding: "10px"
+                }}
+            >
+                {Number(age) < 0
+                    ? "Invalid age"
+                    : Number(age) < 18
+                    ? "You are NOT old enough to vote"
+                    : "You are old enough to vote"}
+            </div>
         </div>
        
     );
