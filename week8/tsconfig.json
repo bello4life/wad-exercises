@@ -1,0 +1,16 @@
+{
+    "compilerOptions": { 
+        "noEmit" : true,
+        "target" : "esnext",
+        "module" : "nodenext",
+        "moduleResolution" : "nodenext", 
+        "strict" : true,
+        "jsx": "preserve",
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "paths": {
+            "*": ["./types/*"]
+        }
+    },
+    "files" : ["server.ts", "src/main.tsx", "types/extend-session.ts"]
+}
