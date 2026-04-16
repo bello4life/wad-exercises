@@ -1,0 +1,18 @@
+{
+    "dependencies": {
+        "better-sqlite3": "^12.9.0",
+        "ejs": "^5.0.2",
+        "express": "^5.2.1",
+        "express-session": "^1.19.0",
+        "express-session-better-sqlite3": "^1.2.1",
+        "xss": "^1.0.15"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.2"
+    },
+    "scripts": {
+        "startHittastic" : "cd hittastic && node server.mjs",
+        "startPhish" : "cd bogweed && node app.mjs",
+        "start": "concurrently \"npm run startHittastic\" \"npm run startPhish\""
+    }
+}
